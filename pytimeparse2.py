@@ -34,6 +34,7 @@ __version__ = '1.6.0'
 
 import typing
 import re
+from datetime import timedelta
 
 
 SIGN = r'(?P<sign>[+|-]|\+)?'
@@ -218,6 +219,29 @@ def parse(
     """
     try:
         return _parse(sval, granularity)
+    except Exception:
+        if raise_exception:
+            raise
+        return None
+
+def parse_to_timedelta(
+        sval: typing.Union[str, int, float],
+        granularity: str = 'seconds',
+        raise_exception: bool = False,
+) -> typing.Optional[typing.Union[timedelta, typing.NoReturn]]:
+    """
+    The same as parse(), but returns a timedelta instead. Note: this
+    format does not support months, so it has the same caveats as
+    `parse()`
+    
+
+    Arguments:
+    - `sval`: the string value to parse
+    - `granularity`: minimal type of digits after last colon (default is ``seconds``)
+    - `raise_exception`: raise exception on parsing errors (default is ``False``)
+    """
+    try:
+        return timedelta(seconds=parse(sval, granularity, raise_exception))
     except Exception:
         if raise_exception:
             raise
