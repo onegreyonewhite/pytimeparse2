@@ -26,19 +26,19 @@ class TestTimeparse(unittest.TestCase):
     def test_mins(self):
         """Test parsing minutes."""
         self.assertEqual(re.match(timeparse.MINS, '32m').groupdict(),
-                         {'mins': '32'})
+                         {'minutes': '32'})
         self.assertEqual(re.match(timeparse.MINS, '32min').groupdict(),
-                         {'mins': '32'})
+                         {'minutes': '32'})
         self.assertEqual(re.match(timeparse.MINS, '32mins').groupdict(),
-                         {'mins': '32'})
+                         {'minutes': '32'})
         self.assertEqual(re.match(timeparse.MINS, '32minute').groupdict(),
-                         {'mins': '32'})
+                         {'minutes': '32'})
         self.assertEqual(re.match(timeparse.MINS, '32minutes').groupdict(),
-                         {'mins': '32'})
+                         {'minutes': '32'})
         self.assertEqual(re.match(timeparse.MINS, '32mins').groupdict(),
-                         {'mins': '32'})
+                         {'minutes': '32'})
         self.assertEqual(re.match(timeparse.MINS, '32min').groupdict(),
-                         {'mins': '32'})
+                         {'minutes': '32'})
 
     def test_hrs(self):
         """Test parsing hours."""
@@ -106,7 +106,7 @@ class TestTimeparse(unittest.TestCase):
         self.assertGreater(
             set(re.match(timeparse.TIMEFORMATS[0] + r'\s*$',
                          '16h32m64s  ').groupdict().items()),
-            set([('hours', '16'), ('mins', '32'), ('secs', '64')]))
+            set([('hours', '16'), ('minutes', '32'), ('seconds', '64')]))
 
     def test_timeparse_multipliers(self):
         """Test parsing time unit multipliers."""
