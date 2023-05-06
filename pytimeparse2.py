@@ -30,7 +30,7 @@ kinds of time expressions.
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__version__ = '1.6.0'
+__version__ = '1.7.0'
 
 import typing
 import re
