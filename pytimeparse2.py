@@ -39,7 +39,7 @@ from datetime import timedelta
 try:
     from dateutil.relativedelta import relativedelta
     HAS_RELITIVE_TIMEDELTA = True
-except ImportError:
+except ImportError:  # pragma: no cover
     HAS_RELITIVE_TIMEDELTA = False
 
 
@@ -181,7 +181,7 @@ def parse(
         granularity: str = 'seconds',
         raise_exception: bool = False,
         as_timedelta: bool = False,
-) -> typing.Optional[typing.Union[int, float, typing.NoReturn]]:
+) -> typing.Optional[typing.Union[int, float, timedelta, typing.NoReturn]]:
     """
     Parse a time expression, returning it as a number of seconds.  If
     possible, the return value will be an `int`; if this is not
@@ -239,10 +239,12 @@ def parse(
     """
     try:
         value = _parse(sval, granularity, relativedelta if HAS_RELITIVE_TIMEDELTA and as_timedelta else timedelta)
-        if not as_timedelta:
-            value = value.total_seconds()
-            if value.is_integer():
-                return int(value)
+        if not as_timedelta and value is not None:
+            new_value = value.total_seconds()
+            if new_value.is_integer():
+                return int(new_value)
+            else:
+                return new_value
         return value
     except Exception:
         if raise_exception:
