@@ -30,10 +30,18 @@ kinds of time expressions.
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__version__ = '1.6.0'
+__version__ = '1.7.0'
 
 import typing
 import re
+from datetime import timedelta
+
+try:
+    from dateutil.relativedelta import relativedelta
+    HAS_RELITIVE_TIMEDELTA = True
+except ImportError:  # pragma: no cover
+    HAS_RELITIVE_TIMEDELTA = False
+    relativedelta = None  # type: ignore
 
 
 SIGN = r'(?P<sign>[+|-]|\+)?'
@@ -42,15 +50,15 @@ MONTHS = r'(?P<months>[\d.]+)\s*(?:mos?.?|mths?.?|months?)'
 WEEKS = r'(?P<weeks>[\d.]+)\s*(?:w|wks?|weeks?)'
 DAYS = r'(?P<days>[\d.]+)\s*(?:d|dys?|days?)'
 HOURS = r'(?P<hours>[\d.]+)\s*(?:h|hrs?|hours?)'
-MINS = r'(?P<mins>[\d.]+)\s*(?:m|(mins?)|(minutes?))'
-SECS = r'(?P<secs>[\d.]+)\s*(?:s|secs?|seconds?)'
-MILLIS = r'(?P<millis>[\d.]+)\s*(?:ms|msecs?|millis|milliseconds?)'
+MINS = r'(?P<minutes>[\d.]+)\s*(?:m|(mins?)|(minutes?))'
+SECS = r'(?P<seconds>[\d.]+)\s*(?:s|secs?|seconds?)'
+MILLIS = r'(?P<milliseconds>[\d.]+)\s*(?:ms|msecs?|millis|milliseconds?)'
 SEPARATORS = r'[,/]'
-SECCLOCK = r':(?P<secs>\d{2}(?:\.\d+)?)'
-MINCLOCK = r'(?P<mins>\d{1,2}):(?P<secs>\d{2}(?:\.\d+)?)'
-HOURCLOCK = r'(?P<hours>\d+):(?P<mins>\d{2}):(?P<secs>\d{2}(?:\.\d+)?)'
+SECCLOCK = r':(?P<seconds>\d{2}(?:\.\d+)?)'
+MINCLOCK = r'(?P<minutes>\d{1,2}):(?P<seconds>\d{2}(?:\.\d+)?)'
+HOURCLOCK = r'(?P<hours>\d+):(?P<minutes>\d{2}):(?P<seconds>\d{2}(?:\.\d+)?)'
 DAYCLOCK = (r'(?P<days>\d+):(?P<hours>\d{2}):'
-            r'(?P<mins>\d{2}):(?P<secs>\d{2}(?:\.\d+)?)')
+            r'(?P<minutes>\d{2}):(?P<seconds>\d{2}(?:\.\d+)?)')
 
 MULTIPLIERS = {
     'years': 60 * 60 * 24 * 365,
@@ -58,9 +66,9 @@ MULTIPLIERS = {
     'weeks': 60 * 60 * 24 * 7,
     'days': 60 * 60 * 24,
     'hours': 60 * 60,
-    'mins': 60,
-    'secs': 1,
-    'millis': 1e-3,
+    'minutes': 60,
+    'seconds': 1,
+    'milliseconds': 1e-3,
 }
 
 
@@ -97,25 +105,27 @@ COMPILED_TIMEFORMATS = [
 ]
 
 
-def _all_digits(mdict):
-    digits_sum = 0
-    should_int = True
+def _all_digits(mdict, delta_class):
+    if HAS_RELITIVE_TIMEDELTA and issubclass(delta_class, relativedelta):
+        if 'milliseconds' in mdict:
+            mdict['microseconds'] = float(mdict.pop('milliseconds') or 0) * 1000
+        return delta_class(**{k: float(v) for k, v in mdict.items() if v})
+
+    delta = delta_class(**{
+        key: float(mdict.pop(key) or 0)
+        for key in mdict.copy()
+        if key in ('hours', 'minutes', 'days', 'milliseconds')
+    })
 
     for time_type, value in mdict.items():
         if not value:
             continue
         if value.isdigit():
-            digits_sum += MULTIPLIERS[time_type] * int(value, 10)
-            if time_type == 'millis':
-                should_int = False
+            delta += delta_class(seconds=MULTIPLIERS[time_type] * int(value, 10))
         elif value.replace('.', '', 1).isdigit():
-            digits_sum += MULTIPLIERS[time_type] * float(value)
-            if time_type == 'secs':
-                should_int = False
+            delta += delta_class(seconds=MULTIPLIERS[time_type] * float(value))
 
-    if should_int:
-        return int(digits_sum)
-    return digits_sum
+    return delta
 
 
 def _interpret_as_minutes(sval, mdict):
@@ -125,25 +135,28 @@ def _interpret_as_minutes(sval, mdict):
     this function after parsing out a dictionary to change that assumption.
 
     >>> import pprint
-    >>> pprint.pprint(_interpret_as_minutes('1:24', {'secs': '24', 'mins': '1'}))
-    {'hours': '1', 'mins': '24'}
+    >>> pprint.pprint(_interpret_as_minutes('1:24', {'seconds': '24', 'minutes': '1'}))
+    {'hours': '1', 'minutes': '24'}
     """
     if sval.count(':') == 1 and '.' not in sval and (('hours' not in mdict) or (mdict['hours'] is None)) and (
             ('days' not in mdict) or (mdict['days'] is None)) and (('weeks' not in mdict) or (mdict['weeks'] is None)) \
             and (('months' not in mdict) or (mdict['months'] is None)) \
             and (('years' not in mdict) or (mdict['years'] is None)):
-        mdict['hours'] = mdict['mins']
-        mdict['mins'] = mdict['secs']
-        mdict.pop('secs')
+        mdict['hours'] = mdict['minutes']
+        mdict['minutes'] = mdict['seconds']
+        mdict.pop('seconds')
     return mdict
 
 
 def _parse(
         sval: typing.Union[str, int, float],
-        granularity: str = 'seconds'
-) -> typing.Optional[typing.Union[int, float]]:
+        granularity: str = 'seconds',
+        delta_class: typing.Type[timedelta] = timedelta
+) -> typing.Optional[timedelta]:
     if isinstance(sval, (int, float)):
-        return int(sval)
+        return delta_class(seconds=int(sval))
+    if sval.replace('.', '', 1).replace('-', '', 1).replace('+', '', 1).isdigit():
+        return delta_class(seconds=int(float(sval)))
 
     match = COMPILED_SIGN.match(sval)
     sign = -1 if match.groupdict()['sign'] == '-' else 1  # type: ignore
@@ -159,16 +172,28 @@ def _parse(
         if granularity == 'minutes':
             mdict = _interpret_as_minutes(sval, mdict)
 
-        return sign * _all_digits(mdict)
+        return sign * _all_digits(mdict, delta_class)
 
-    return int(float(sval)) * sign
+    return timedelta(seconds=float(sval)) * sign
+
+
+def enable_dateutil():
+    global HAS_RELITIVE_TIMEDELTA
+    assert relativedelta is not None, 'Module python-dateutil should be installed before.'
+    HAS_RELITIVE_TIMEDELTA = True
+
+
+def disable_dateutil():
+    global HAS_RELITIVE_TIMEDELTA
+    HAS_RELITIVE_TIMEDELTA = False
 
 
 def parse(
         sval: typing.Union[str, int, float],
         granularity: str = 'seconds',
         raise_exception: bool = False,
-) -> typing.Optional[typing.Union[int, float, typing.NoReturn]]:
+        as_timedelta: bool = False,
+) -> typing.Optional[typing.Union[int, float, timedelta, typing.NoReturn]]:
     """
     Parse a time expression, returning it as a number of seconds.  If
     possible, the return value will be an `int`; if this is not
@@ -179,6 +204,7 @@ def parse(
     - `sval`: the string value to parse
     - `granularity`: minimal type of digits after last colon (default is ``seconds``)
     - `raise_exception`: raise exception on parsing errors (default is ``False``)
+    - `as_timedelta`: return ``datetime.timedelta`` object instead of ``int`` (default is ``False``)
 
     >>> parse('1:24')
     84
@@ -208,6 +234,13 @@ def parse(
     >>> parse('1:30', granularity='minutes')
     5400
 
+    If ``as_timedelta`` is specified as ``True``, then return timedelta object.
+
+    >>> parse('24h', as_timedelta=True)
+    relativedelta(days=+1)
+    >>> parse('48:00', as_timedelta=True, granularity='minutes')
+    relativedelta(days=+2)
+
     If ``raise_exception`` is specified as ``True``, then exception will raised
     on failed parsing.
 
@@ -217,7 +250,14 @@ def parse(
     ValueError: could not convert string to float: ':1.1.1'
     """
     try:
-        return _parse(sval, granularity)
+        value = _parse(sval, granularity, relativedelta if HAS_RELITIVE_TIMEDELTA and as_timedelta else timedelta)
+        if not as_timedelta and value is not None:
+            new_value = value.total_seconds()
+            if new_value.is_integer():
+                return int(new_value)
+            else:
+                return new_value
+        return value
     except Exception:
         if raise_exception:
             raise
