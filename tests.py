@@ -14,9 +14,9 @@ import pytimeparse2 as timeparse
 import unittest
 
 
-class TestTimeparse(unittest.TestCase):
+class TestParsing(unittest.TestCase):
     """
-    Unit tests for the `timeparse` module.
+    Unit tests for basic regex mat
     """
 
     def setUp(self):
@@ -107,6 +107,17 @@ class TestTimeparse(unittest.TestCase):
             set(re.match(timeparse.TIMEFORMATS[0] + r'\s*$',
                          '16h32m64s  ').groupdict().items()),
             set([('hours', '16'), ('minutes', '32'), ('seconds', '64')]))
+
+
+
+class TestNumberOutput(unittest.TestCase):
+    """
+    Unit tests to ensure that numerical outputs are correct
+    """
+
+    def setUp(self):
+        """Setup function."""
+        pass
 
     def test_timeparse_multipliers(self):
         """Test parsing time unit multipliers."""
@@ -426,12 +437,23 @@ class TestTimeparse(unittest.TestCase):
     def test_combined(self):
         self.assertEqual(timeparse.parse('1y2mo3w4d5h6m7s8ms'), 38898367.008)
 
+class MiscTests(unittest.TestCase):
+    """
+    Miscellaneous unit tests for the `timeparse` module.
+    """
+
+    def setUp(self):
+        """Setup function."""
+        pass
+
     def test_strange(self):
         self.assertIsNone(timeparse.parse('1.1.1:22'))
 
     def test_doctest(self):
         """Run timeparse doctests."""
         self.assertTrue(doctest.testmod(timeparse, raise_on_error=True))
+
+
 
 
 if __name__ == '__main__':
