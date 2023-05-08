@@ -540,7 +540,7 @@ class TestRelativeDeltaOutput(unittest.TestCase):
         """Check that minute-level granularity does not apply inappropriately."""
         self.assertEqual(timeparse.parse('4:32:02', granularity='minutes', as_timedelta=True), relativedelta(seconds = 272*60+2))
         self.assertEqual(timeparse.parse('+4:32:02', granularity='minutes', as_timedelta=True), relativedelta(seconds = 272*60+2))
-        self.assertEqual(timeparse.parse('-4:32:02', granularity='minutes', as_timedelta=True), relativedelta(seconds = -(272*60+2)))
+        self.assertEqual(timeparse.parse('-4:32:02', granularity='minutes', as_timedelta=True), -relativedelta(seconds = 2, minutes = 32, hours=4))
 
     def test_timeparse_granularity_3(self):
         """Check that minute-level granularity does not apply inappropriately."""
