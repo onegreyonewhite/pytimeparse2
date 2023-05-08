@@ -257,7 +257,7 @@ def parse(
                 return int(new_value)
             else:
                 return new_value
-        return value
+        return value.normalized()
     except Exception:
         if raise_exception:
             raise
