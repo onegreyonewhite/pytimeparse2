@@ -526,9 +526,9 @@ class TestRelativeDeltaOutput(unittest.TestCase):
 
     def test_timeparse_10(self):
         """timeparse test case 10."""
-        self.assertEqual(timeparse.parse('2:04:13:02.266', as_timedelta=True), relativedelta(seconds = 187982, microsecond = 266 * 1000))
-        self.assertEqual(timeparse.parse('+2:04:13:02.266', as_timedelta=True), relativedelta(seconds = 187982, microsecond = 266 * 1000))
-        self.assertEqual(timeparse.parse('-2:04:13:02.266', as_timedelta=True), relativedelta(seconds = -187982, microsecond = - 266 * 1000))
+        self.assertEqual(timeparse.parse('2:04:13:02.266', as_timedelta=True), relativedelta(seconds = 187982, microseconds = 266 * 1000))
+        self.assertEqual(timeparse.parse('+2:04:13:02.266', as_timedelta=True), relativedelta(seconds = 187982, microseconds = 266 * 1000))
+        self.assertEqual(timeparse.parse('-2:04:13:02.266', as_timedelta=True), relativedelta(seconds = -187982, microseconds = - 266 * 1000))
 
     def test_timeparse_granularity_1(self):
         """Check that minute-level granularity applies correctly."""
@@ -544,9 +544,9 @@ class TestRelativeDeltaOutput(unittest.TestCase):
 
     def test_timeparse_granularity_3(self):
         """Check that minute-level granularity does not apply inappropriately."""
-        self.assertEqual(timeparse.parse('7:02.223', granularity='minutes', as_timedelta=True), relativedelta(seconds = 2, microsecond = 1000 * 223, minute=7))
-        self.assertEqual(timeparse.parse('+7:02.223', granularity='minutes', as_timedelta=True), relativedelta(seconds = 2, microsecond = 1000 * 223, minute = 7))
-        self.assertEqual(timeparse.parse('-7:02.223', granularity='minutes', as_timedelta=True), relativedelta(seconds = -2, microsecond = -1000 * 223, minute = -7))
+        self.assertEqual(timeparse.parse('7:02.223', granularity='minutes', as_timedelta=True), relativedelta(seconds = 2, microseconds = 1000 * 223, minute=7))
+        self.assertEqual(timeparse.parse('+7:02.223', granularity='minutes', as_timedelta=True), relativedelta(seconds = 2, microseconds = 1000 * 223, minutes = 7))
+        self.assertEqual(timeparse.parse('-7:02.223', granularity='minutes', as_timedelta=True), relativedelta(seconds = -2, microseconds = -1000 * 223, minutes = -7))
 
     def test_timeparse_granularity_4(self):
         """Check that minute-level granularity does not apply inappropriately."""
@@ -557,9 +557,9 @@ class TestRelativeDeltaOutput(unittest.TestCase):
     def test_timeparse_unparsed(self):
         """Check that unparsed values tries to converts into int(). """
         self.assertEqual(timeparse.parse(100, as_timedelta=True), relativedelta(seconds = 100))
-        self.assertEqual(timeparse.parse(-18.333, as_timedelta=True), relativedelta(seconds = -18, microsecond = -333 * 1000))
-        self.assertEqual(timeparse.parse('99.1', as_timedelta=True), relativedelta(seconds = 99, microsecond = 100 * 1000))
-        self.assertEqual(timeparse.parse('-99.1', as_timedelta=True), relativedelta(seconds = -99, microsecond = -100 * 1000))
+        self.assertEqual(timeparse.parse(-18.333, as_timedelta=True), relativedelta(seconds = -18, microseconds = -333 * 1000))
+        self.assertEqual(timeparse.parse('99.1', as_timedelta=True), relativedelta(seconds = 99, microseconds = 100 * 1000))
+        self.assertEqual(timeparse.parse('-99.1', as_timedelta=True), relativedelta(seconds = -99, microseconds = -100 * 1000))
 
     def test_timeparse_11(self):
         """timeparse test case 11."""
@@ -570,9 +570,9 @@ class TestRelativeDeltaOutput(unittest.TestCase):
 
     def test_timeparse_12(self):
         """timeparse test case 12."""
-        self.assertEqual(timeparse.parse('2 days,  4:13:02.266', as_timedelta=True), relativedelta(seconds = 187982, microsecond = 1000 * 266))
-        self.assertEqual(timeparse.parse('+2 days,  4:13:02.266', as_timedelta=True), relativedelta(seconds = 187982, microsecond = 1000 * 266))
-        self.assertEqual(timeparse.parse('-2 days,  4:13:02.266', as_timedelta=True), relativedelta(seconds = -187982, microsecond = -1000 * 266))
+        self.assertEqual(timeparse.parse('2 days,  4:13:02.266', as_timedelta=True), relativedelta(seconds = 187982, microseconds = 1000 * 266))
+        self.assertEqual(timeparse.parse('+2 days,  4:13:02.266', as_timedelta=True), relativedelta(seconds = 187982, microseconds = 1000 * 266))
+        self.assertEqual(timeparse.parse('-2 days,  4:13:02.266', as_timedelta=True), relativedelta(seconds = -187982, microseconds = -1000 * 266))
 
     def test_timeparse_13(self):
         """timeparse test case 13."""
@@ -600,33 +600,33 @@ class TestRelativeDeltaOutput(unittest.TestCase):
 
     def test_timeparse_16b(self):
         """timeparse test case 16b."""
-        self.assertEqual(timeparse.parse('1.75 s', as_timedelta=True), relativedelta(seconds = 1, microsecond = 10000 * 75))
-        self.assertEqual(timeparse.parse('+1.75 s', as_timedelta=True), relativedelta(seconds = 1, microsecond = 10000 * 75))
-        self.assertEqual(timeparse.parse('-1.75 s', as_timedelta=True), relativedelta(seconds = -1, microsecond = -10000 * 75))
+        self.assertEqual(timeparse.parse('1.75 s', as_timedelta=True), relativedelta(seconds = 1, microseconds = 10000 * 75))
+        self.assertEqual(timeparse.parse('+1.75 s', as_timedelta=True), relativedelta(seconds = 1, microseconds = 10000 * 75))
+        self.assertEqual(timeparse.parse('-1.75 s', as_timedelta=True), relativedelta(seconds = -1, microseconds = -10000 * 75))
 
     def test_timeparse_16c(self):
         """timeparse test case 16c."""
-        self.assertEqual(timeparse.parse('1.75 sec', as_timedelta=True), relativedelta(seconds = 1, microsecond = 10000 * 75))
-        self.assertEqual(timeparse.parse('+1.75 sec', as_timedelta=True), relativedelta(seconds = 1, microsecond = 10000 * 75))
-        self.assertEqual(timeparse.parse('-1.75 sec', as_timedelta=True), relativedelta(seconds = -1, microsecond = -10000 * 75))
+        self.assertEqual(timeparse.parse('1.75 sec', as_timedelta=True), relativedelta(seconds = 1, microseconds = 10000 * 75))
+        self.assertEqual(timeparse.parse('+1.75 sec', as_timedelta=True), relativedelta(seconds = 1, microseconds = 10000 * 75))
+        self.assertEqual(timeparse.parse('-1.75 sec', as_timedelta=True), relativedelta(seconds = -1, microseconds = -10000 * 75))
 
     def test_timeparse_16d(self):
         """timeparse test case 16d."""
-        self.assertEqual(timeparse.parse('1.75 secs', as_timedelta=True), relativedelta(seconds = 1, microsecond = 75 * 10000))
-        self.assertEqual(timeparse.parse('+1.75 secs', as_timedelta=True), relativedelta(seconds = 1, microsecond = 75 * 10000))
-        self.assertEqual(timeparse.parse('-1.75 secs', as_timedelta=True), - relativedelta(seconds = 1, microsecond = 75 * 10000))
+        self.assertEqual(timeparse.parse('1.75 secs', as_timedelta=True), relativedelta(seconds = 1, microseconds = 75 * 10000))
+        self.assertEqual(timeparse.parse('+1.75 secs', as_timedelta=True), relativedelta(seconds = 1, microseconds = 75 * 10000))
+        self.assertEqual(timeparse.parse('-1.75 secs', as_timedelta=True), - relativedelta(seconds = 1, microseconds = 75 * 10000))
 
     def test_timeparse_16e(self):
         """timeparse test case 16e."""
-        self.assertEqual(timeparse.parse('1.75 second', as_timedelta=True), relativedelta(seconds = 1, microsecond = 75 * 10000))
-        self.assertEqual(timeparse.parse('+1.75 second', as_timedelta=True), relativedelta(seconds = 1, microsecond = 75 * 10000))
-        self.assertEqual(timeparse.parse('-1.75 second', as_timedelta=True), - relativedelta(seconds = 1, microsecond = 75 * 10000))
+        self.assertEqual(timeparse.parse('1.75 second', as_timedelta=True), relativedelta(seconds = 1, microseconds = 75 * 10000))
+        self.assertEqual(timeparse.parse('+1.75 second', as_timedelta=True), relativedelta(seconds = 1, microseconds = 75 * 10000))
+        self.assertEqual(timeparse.parse('-1.75 second', as_timedelta=True), - relativedelta(seconds = 1, microseconds = 75 * 10000))
 
     def test_timeparse_16f(self):
         """timeparse test case 16f."""
-        self.assertEqual(timeparse.parse('1.75 seconds', as_timedelta=True), relativedelta(seconds = 1, microsecond = 75 * 10000))
-        self.assertEqual(timeparse.parse('+1.75 seconds', as_timedelta=True), relativedelta(seconds = 1, microsecond = 75 * 10000))
-        self.assertEqual(timeparse.parse('-1.75 seconds', as_timedelta=True), -relativedelta(seconds = 1, microsecond = 75 * 10000))
+        self.assertEqual(timeparse.parse('1.75 seconds', as_timedelta=True), relativedelta(seconds = 1, microseconds = 75 * 10000))
+        self.assertEqual(timeparse.parse('+1.75 seconds', as_timedelta=True), relativedelta(seconds = 1, microseconds = 75 * 10000))
+        self.assertEqual(timeparse.parse('-1.75 seconds', as_timedelta=True), -relativedelta(seconds = 1, microseconds = 75 * 10000))
 
     def test_timeparse_17(self):
         """timeparse test case 17."""
@@ -738,9 +738,9 @@ class TestRelativeDeltaOutput(unittest.TestCase):
 
     def test_plain_numbers(self):
         self.assertEqual(timeparse.parse('10', as_timedelta=True), relativedelta(seconds = 10))
-        self.assertEqual(timeparse.parse('10.1', as_timedelta=True), relativedelta(seconds = 10, microsecond = 100000))
+        self.assertEqual(timeparse.parse('10.1', as_timedelta=True), relativedelta(seconds = 10, microseconds = 100000))
         self.assertEqual(timeparse.parse('-10', as_timedelta=True), relativedelta(seconds = -10))
-        self.assertEqual(timeparse.parse('-10.1', as_timedelta=True), -relativedelta(seconds = 10, microsecond = 100000))
+        self.assertEqual(timeparse.parse('-10.1', as_timedelta=True), -relativedelta(seconds = 10, microseconds = 100000))
 
     def test_combined(self):
         self.assertEqual(timeparse.parse('1y2mo3w4d5h6m7s8ms', as_timedelta=True), relativedelta(seconds = 38898367, microseconds=8000))
