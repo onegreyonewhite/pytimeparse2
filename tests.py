@@ -20,10 +20,6 @@ class TestParsing(unittest.TestCase):
     Unit tests for basic regex mat
     """
 
-    def setUp(self):
-        """Setup function."""
-        pass
-
     def test_mins(self):
         """Test parsing minutes."""
         self.assertEqual(re.match(timeparse.MINS, '32m').groupdict(),
@@ -115,10 +111,6 @@ class TestNumberOutput(unittest.TestCase):
     """
     Unit tests to ensure that numerical outputs are correct
     """
-
-    def setUp(self):
-        """Setup function."""
-        pass
 
     def test_timeparse_multipliers(self):
         """Test parsing time unit multipliers."""
@@ -443,10 +435,6 @@ class TestRelativeDeltaOutput(unittest.TestCase):
     Unit tests to ensure that numerical outputs are correct
     """
 
-    def setUp(self):
-        """Setup function."""
-        pass
-
     def test_timeparse_multipliers(self):
         """Test parsing time unit multipliers."""
         self.assertEqual(timeparse.parse('32 min', as_timedelta=True), relativedelta(seconds=1920))
@@ -751,10 +739,6 @@ class MiscTests(unittest.TestCase):
     """
     Miscellaneous unit tests for the `timeparse` module.
     """
-
-    def setUp(self):
-        """Setup function."""
-        pass
 
     def test_strange(self):
         self.assertIsNone(timeparse.parse('1.1.1:22'))
