@@ -41,6 +41,7 @@ try:
     HAS_RELITIVE_TIMEDELTA = True
 except ImportError:  # pragma: no cover
     HAS_RELITIVE_TIMEDELTA = False
+    relativedelta = None  # type: ignore
 
 
 SIGN = r'(?P<sign>[+|-]|\+)?'
@@ -174,6 +175,17 @@ def _parse(
         return sign * _all_digits(mdict, delta_class)
 
     return timedelta(seconds=float(sval)) * sign
+
+
+def enable_dateutil():
+    global HAS_RELITIVE_TIMEDELTA
+    assert relativedelta is not None, 'Module python-dateutil should be installed before.'
+    HAS_RELITIVE_TIMEDELTA = True
+
+
+def disable_dateutil():
+    global HAS_RELITIVE_TIMEDELTA
+    HAS_RELITIVE_TIMEDELTA = False
 
 
 def parse(

@@ -74,6 +74,16 @@ for a year" as the basis for calculations with those units.
 - ``3 years``
 - ``1y2mo3w4d5h6m7s8ms``
 
+For better capability with dates, use keyword ``as_timedelta=True`` which mark for function returns
+value as ``datetime.timedelta`` or ``dateutil.relitivedelta.relativedelta`` (if installed)::
+
+    >>> from pytimeparse import parse
+    >>> parse('24h', as_timedelta=True)
+    relativedelta(days=+1)
+
+You can also forced disable dateutil support by calling ``disable_dateutil()`` before ``parse(...)``.
+For returning support call ``enable_dateutil()``.
+
 Notes
 -----
 
