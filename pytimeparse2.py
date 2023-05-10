@@ -109,7 +109,7 @@ def _all_digits(mdict, delta_class):
     if HAS_RELITIVE_TIMEDELTA and issubclass(delta_class, relativedelta):
         if 'milliseconds' in mdict:
             mdict['microseconds'] = float(mdict.pop('milliseconds') or 0) * 1000
-        return delta_class(**{k: float(v) for k, v in mdict.items() if v})
+        return delta_class(**{k: float(v) for k, v in mdict.items() if v}).normalized()
 
     delta = delta_class(**{
         key: float(mdict.pop(key) or 0)
@@ -257,7 +257,7 @@ def parse(
                 return int(new_value)
             else:
                 return new_value
-        return value.normalized()
+        return value
     except Exception:
         if raise_exception:
             raise
