@@ -508,9 +508,9 @@ class TestRelativeDeltaOutput(unittest.TestCase):
 
     def test_timeparse_9(self):
         """timeparse test case 9."""
-        self.assertEqual(timeparse.parse('4:13:02.266', as_timedelta=True), relativedelta(hours=4, minutes=13, seconds=2, microseconds=266 * 1000))
-        self.assertEqual(timeparse.parse('+4:13:02.266', as_timedelta=True), relativedelta(hours=4, minutes=13, seconds=2, microseconds=266 * 1000))
-        self.assertEqual(timeparse.parse('-4:13:02.266', as_timedelta=True), -relativedelta(hours=4, minutes=13, seconds=2, microseconds=266 * 1000))
+        self.assertEqual(timeparse.parse('4:13:02.266', as_timedelta=True), relativedelta(hours=4, minutes=13, seconds=2, microseconds=266*1000))
+        self.assertEqual(timeparse.parse('+4:13:02.266', as_timedelta=True), relativedelta(hours=4, minutes=13, seconds=2, microseconds=266*1000))
+        self.assertEqual(timeparse.parse('-4:13:02.266', as_timedelta=True), -relativedelta(hours=4, minutes=13, seconds=2, microseconds=266*1000))
 
     def test_timeparse_10(self):
         """timeparse test case 10."""
