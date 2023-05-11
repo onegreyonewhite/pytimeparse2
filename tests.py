@@ -232,9 +232,9 @@ class TestNumberOutput(unittest.TestCase):
     def test_timeparse_unparsed(self):
         """Check that unparsed values tries to converts into int(). """
         self.assertEqual(timeparse.parse(100), 100)
-        self.assertEqual(timeparse.parse(-18.333), -18)
-        self.assertEqual(timeparse.parse('99.1'), 99)
-        self.assertEqual(timeparse.parse('-99.1'), -99)
+        self.assertEqual(timeparse.parse(-18.333), -18.333)
+        self.assertEqual(timeparse.parse('99.1'), 99.1)
+        self.assertEqual(timeparse.parse('-99.1'), -99.1)
 
     def test_timeparse_11(self):
         """timeparse test case 11."""
@@ -425,9 +425,9 @@ class TestNumberOutput(unittest.TestCase):
 
     def test_plain_numbers(self):
         self.assertEqual(timeparse.parse('10'), 10)
-        self.assertEqual(timeparse.parse('10.1'), 10)
+        self.assertEqual(timeparse.parse('10.1'), 10.1)
         self.assertEqual(timeparse.parse('-10'), -10)
-        self.assertEqual(timeparse.parse('-10.1'), -10)
+        self.assertEqual(timeparse.parse('-10.1'), -10.1)
 
     def test_combined(self):
         self.assertEqual(timeparse.parse('1y2mo3w4d5h6m7s8ms'), 38898367.008)
@@ -509,7 +509,7 @@ class TestRelativeDeltaOutput(unittest.TestCase):
         """timeparse test case 8."""
         self.assertEqual(timeparse.parse('4:13:02', as_timedelta=True), relativedelta(hours=4, minutes=13, seconds=2))
         self.assertEqual(timeparse.parse('+4:13:02', as_timedelta=True), relativedelta(hours=4, minutes=13, seconds=2))
-        self.assertEqual(timeparse.parse('-4:13:02', as_timedelta=True), relativedelta(hours=4, minutes=13, seconds=2))
+        self.assertEqual(timeparse.parse('-4:13:02', as_timedelta=True), -relativedelta(hours=4, minutes=13, seconds=2))
 
     def test_timeparse_9(self):
         """timeparse test case 9."""

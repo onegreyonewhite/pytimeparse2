@@ -148,15 +148,21 @@ def _interpret_as_minutes(sval, mdict):
     return mdict
 
 
+def _normilized_relativedelta(value: typing.Optional[timedelta]) -> typing.Optional[timedelta]:
+    if isinstance(value, relativedelta):
+        return value.normalized()
+    return value
+
+
 def _parse(
         sval: typing.Union[str, int, float],
         granularity: str = 'seconds',
         delta_class: typing.Type[timedelta] = timedelta
 ) -> typing.Optional[timedelta]:
     if isinstance(sval, (int, float)):
-        return delta_class(seconds=int(sval))
+        return _normilized_relativedelta(delta_class(seconds=float(sval)))
     if sval.replace('.', '', 1).replace('-', '', 1).replace('+', '', 1).isdigit():
-        return delta_class(seconds=int(float(sval)))
+        return _normilized_relativedelta(delta_class(seconds=float(sval)))
 
     match = COMPILED_SIGN.match(sval)
     sign = -1 if match.groupdict()['sign'] == '-' else 1  # type: ignore
