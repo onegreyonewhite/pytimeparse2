@@ -273,11 +273,14 @@ class TestNumberOutput(unittest.TestCase):
 
     def test_timeparse_16(self):
         """timeparse test case 16."""
-        self.assertEqual(timeparse.parse('2 days, 5 hours, 34 minutes, 56 seconds'),
+        self.assertEqual(
+            timeparse.parse('2 days, 5 hours, 34 minutes, 56 seconds'),
             192896)
-        self.assertEqual(timeparse.parse('+2 days, 5 hours, 34 minutes, 56 seconds'),
+        self.assertEqual(
+            timeparse.parse('+2 days, 5 hours, 34 minutes, 56 seconds'),
             192896)
-        self.assertEqual(timeparse.parse('-2 days, 5 hours, 34 minutes, 56 seconds'),
+        self.assertEqual(
+            timeparse.parse('-2 days, 5 hours, 34 minutes, 56 seconds'),
             -192896)
 
     def test_timeparse_16b(self):
