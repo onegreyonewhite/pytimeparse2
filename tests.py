@@ -8,6 +8,8 @@ Unit tests for the `parse` function.
 """
 
 from __future__ import absolute_import
+
+import datetime
 import doctest
 import re
 import pytimeparse2 as timeparse
@@ -749,6 +751,13 @@ class MiscTests(unittest.TestCase):
     def test_doctest(self):
         """Run timeparse doctests."""
         self.assertTrue(doctest.testmod(timeparse, raise_on_error=True))
+
+    def test_disable_dateutil(self):
+        self.assertNotIsInstance(timeparse.parse('10:10', as_timedelta=True), datetime.timedelta)
+        timeparse.disable_dateutil()
+        self.assertIsInstance(timeparse.parse('10:10', as_timedelta=True), datetime.timedelta)
+        timeparse.enable_dateutil()
+        self.assertNotIsInstance(timeparse.parse('10:10', as_timedelta=True), datetime.timedelta)
 
 
 

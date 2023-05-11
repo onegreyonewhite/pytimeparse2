@@ -41,6 +41,7 @@ try:
     HAS_RELITIVE_TIMEDELTA = True
 except ImportError:  # pragma: no cover
     HAS_RELITIVE_TIMEDELTA = False
+    relativedelta = None  # type: ignore
 
 
 SIGN = r'(?P<sign>[+|-]|\+)?'
@@ -108,7 +109,7 @@ def _all_digits(mdict, delta_class):
     if HAS_RELITIVE_TIMEDELTA and issubclass(delta_class, relativedelta):
         if 'milliseconds' in mdict:
             mdict['microseconds'] = float(mdict.pop('milliseconds') or 0) * 1000
-        return delta_class(**{k: float(v) for k, v in mdict.items() if v})
+        return delta_class(**{k: float(v) for k, v in mdict.items() if v}).normalized()
 
     delta = delta_class(**{
         key: float(mdict.pop(key) or 0)
@@ -174,6 +175,17 @@ def _parse(
         return sign * _all_digits(mdict, delta_class)
 
     return timedelta(seconds=float(sval)) * sign
+
+
+def enable_dateutil():
+    global HAS_RELITIVE_TIMEDELTA
+    assert relativedelta is not None, 'Module python-dateutil should be installed before.'
+    HAS_RELITIVE_TIMEDELTA = True
+
+
+def disable_dateutil():
+    global HAS_RELITIVE_TIMEDELTA
+    HAS_RELITIVE_TIMEDELTA = False
 
 
 def parse(
