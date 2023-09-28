@@ -9,9 +9,9 @@ pytimeparse2: time expression parser
     :target: https://badge.fury.io/py/pytimeparse2
 
 
-This is a `pytimeparse <https://github.com/wroberts/pytimeparse>`_ based project with the aim of optimizing functionality and providing stable support.
+This is a `pytimeparse2 <https://github.com/wroberts/pytimeparse>`_ based project with the aim of optimizing functionality and providing stable support.
 
-Copyright (c) 2021 Sergey Klyuykov <onegreyonewhite@mail.ru>
+Copyright (c) 2023 Sergey Klyuykov <onegreyonewhite@mail.ru>
 
 Licensed under the MIT License (see source file ``pytimeparse2.py`` for
 details).
@@ -60,7 +60,7 @@ expressions like the following:
 It returns the time as a number of seconds (an integer value if
 possible, otherwise a floating-point number)::
 
-    >>> from pytimeparse import parse
+    >>> from pytimeparse2 import parse
     >>> parse('1.2 minutes')
     72
 
@@ -77,7 +77,7 @@ for a year" as the basis for calculations with those units.
 For better capability with dates, use keyword ``as_timedelta=True`` which mark for function returns
 value as ``datetime.timedelta`` or ``dateutil.relitivedelta.relativedelta`` (if installed)::
 
-    >>> from pytimeparse import parse
+    >>> from pytimeparse2 import parse
     >>> parse('24h', as_timedelta=True)
     relativedelta(days=+1)
 
@@ -91,7 +91,7 @@ A number of seconds can be converted back into a string using the
 ``datetime`` module in the standard library, as noted in
 `this other StackOverflow question <http://stackoverflow.com/questions/538666/python-format-timedelta-to-string>`_::
 
-    >>> from pytimeparse import parse
+    >>> from pytimeparse2 import parse
     >>> import datetime
     >>> parse('1 day, 14:20:16')
     138016
