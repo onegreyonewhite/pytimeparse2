@@ -9,7 +9,7 @@ pytimeparse2: time expression parser
     :target: https://badge.fury.io/py/pytimeparse2
 
 
-This is a `pytimeparse2 <https://github.com/wroberts/pytimeparse>`_ based project with the aim of optimizing functionality and providing stable support.
+This is a `pytimeparse <https://github.com/wroberts/pytimeparse>`_ based project with the aim of optimizing functionality and providing stable support.
 
 Copyright (c) 2023 Sergey Klyuykov <onegreyonewhite@mail.ru>
 
